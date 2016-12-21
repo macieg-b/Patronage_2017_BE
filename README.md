@@ -10,6 +10,7 @@ Movies
 > Response:
 >- "id" : "",
 >- "actors" : [], 
+>- "title" : "",
 >- "uri" : ""
 
 ### GET
@@ -18,7 +19,7 @@ Movies
 > Response:
 >- "id" : "",
 >- "actors" : [], 
->- "uri" : ""
+>- "title" : ""
 
 ### POST
 >**`/movies`** - create movie
