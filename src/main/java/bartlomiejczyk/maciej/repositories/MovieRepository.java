@@ -9,6 +9,6 @@ import java.util.Optional;
  * Created by Holms on 18.12.2016.
  */
 public interface  MovieRepository extends JpaRepository<Movie, Long>{
-    Optional<Movie> findByTitle(String title);
+    Optional<Movie> findById(Long id);
 }
 

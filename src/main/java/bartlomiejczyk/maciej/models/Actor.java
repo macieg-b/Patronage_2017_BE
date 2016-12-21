@@ -3,12 +3,10 @@ package bartlomiejczyk.maciej.models;
 /**
  * Created by Holms on 18.12.2016.
  */
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Actor {
@@ -18,26 +16,48 @@ public class Actor {
     private Movie movie;
 
     @Id
-    @GeneratedValue private Long id;
+    @GeneratedValue
+    private Long id;
     private String name;
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public Movie getMovie(){
+    public Movie getMovie() {
         return movie;
     }
 
-    public Actor(Movie movie, String name) {
+    public void unmapMovie() {
+        movie = null;
+    }
+
+    public Actor(String name) {
         this.name = name;
     }
 
-    Actor(){
+    public Actor(Movie movie, String name) {
+        this.movie = movie;
+        this.name = name;
+    }
+
+    public Actor(String name, Long id) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Actor(Movie movie, String name, Long id) {
+        this.movie = movie;
+        this.name = name;
+        this.id = id;
+    }
+
+
+    Actor() {
 
     }
 }
