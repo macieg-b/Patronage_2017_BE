@@ -1,10 +1,9 @@
 package bartlomiejczyk.maciej.controllers;
 
+import bartlomiejczyk.maciej.domain.Movie;
 import bartlomiejczyk.maciej.exceptions.ActorNotFoundException;
-import bartlomiejczyk.maciej.exceptions.MovieNotFoundException;
-import bartlomiejczyk.maciej.models.Actor;
-import bartlomiejczyk.maciej.models.ActorDTO;
-import bartlomiejczyk.maciej.models.Movie;
+import bartlomiejczyk.maciej.domain.Actor;
+import bartlomiejczyk.maciej.domain.ActorDTO;
 import bartlomiejczyk.maciej.repositories.ActorRepository;
 import bartlomiejczyk.maciej.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +14,20 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Holms on 20.12.2016.
  */
 @RestController
-@RequestMapping("/actor")
+@RequestMapping("/actors")
 class ActorRestController {
     private final MovieRepository movieRepository;
     private final ActorRepository actorRepository;
 
     @Autowired
-    ActorRestController(MovieRepository movieRepository, ActorRepository actorRepository){
+    ActorRestController(MovieRepository movieRepository, ActorRepository actorRepository) {
         this.movieRepository = movieRepository;
         this.actorRepository = actorRepository;
     }
@@ -38,7 +38,7 @@ class ActorRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{actorId}")
-    Actor readActor(@PathVariable Long actorId){
+    Actor readActor(@PathVariable Long actorId) {
         validateActor(actorId);
         return actorRepository.findOne(actorId);
     }
@@ -54,9 +54,9 @@ class ActorRestController {
     @RequestMapping(method = RequestMethod.PUT, value = "/{actorId}")
     ResponseEntity<Actor> updateActor(@RequestBody ActorDTO actorDto, @PathVariable Long actorId) throws URISyntaxException {
         Actor updatedActor;
-        if (actorDto.getMovieId() != null) {
-            validateMovie(actorDto.getMovieId());
-            updatedActor = actorRepository.save(new Actor(movieRepository.getOne(actorDto.getMovieId()), actorDto.getName(), actorId));
+        if (actorDto.getMovieIds() != null) {
+            Set<Movie> movies = new HashSet<>(movieRepository.findAll(actorDto.getMovieIds()));
+            updatedActor = actorRepository.save(new Actor(movies, actorDto.getName(), actorId));
             return ResponseEntity.ok()
                     .header("Actor with id: " + actorId + " has been updated", HttpStatus.ACCEPTED.toString())
                     .body(updatedActor);
@@ -72,7 +72,7 @@ class ActorRestController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{actorId}")
-    ResponseEntity<Actor> removeActor(@PathVariable Long actorId){
+    ResponseEntity<Actor> removeActor(@PathVariable Long actorId) {
         validateActor(actorId);
         actorRepository.delete(actorId);
         return ResponseEntity.ok()
@@ -80,13 +80,8 @@ class ActorRestController {
                 .body(null);
     }
 
-    private void validateActor(Long actorId){
+    private void validateActor(Long actorId) {
         actorRepository.findById(actorId).orElseThrow(
                 () -> new ActorNotFoundException(actorId));
-    }
-
-    private void validateMovie(Long movieId){
-        movieRepository.findById(movieId).orElseThrow(
-                () -> new MovieNotFoundException(movieId));
     }
 }

@@ -1,13 +1,11 @@
-package bartlomiejczyk.maciej.models;
+package bartlomiejczyk.maciej.domain;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
-
-/**
- * Created by Holms on 20.12.2016.
- */
+import java.util.List;
 
 
 @Entity
@@ -17,13 +15,11 @@ public class ActorDTO {
     @GeneratedValue
     private Long id;
 
-    private Long movieId;
+    @ElementCollection
+    private List<Long> movieIds;
 
     @NotNull
     private String name;
-
-
-
 
     public Long getId() {
         return id;
@@ -33,7 +29,7 @@ public class ActorDTO {
         return name;
     }
 
-    public Long getMovieId() {
-        return movieId;
+    public List<Long> getMovieIds() {
+        return movieIds;
     }
 }

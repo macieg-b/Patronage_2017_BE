@@ -1,8 +1,9 @@
 package bartlomiejczyk.maciej.repositories;
 
-import bartlomiejczyk.maciej.models.Movie;
+import bartlomiejczyk.maciej.domain.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
