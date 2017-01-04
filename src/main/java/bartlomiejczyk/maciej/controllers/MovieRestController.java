@@ -1,14 +1,14 @@
 package bartlomiejczyk.maciej.controllers;
 
 import bartlomiejczyk.maciej.domain.Movie;
-import bartlomiejczyk.maciej.domain.MovieDTO;
+import bartlomiejczyk.maciej.domain.MovieView;
+import bartlomiejczyk.maciej.exceptions.MovieNotFoundException;
 import bartlomiejczyk.maciej.repositories.ActorRepository;
 import bartlomiejczyk.maciej.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import bartlomiejczyk.maciej.exceptions.MovieNotFoundException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,16 +24,16 @@ class MovieRestController {
     private final ActorRepository actorRepository;
 
     @Autowired
-    MovieRestController(MovieRepository movieRepository, ActorRepository actorRepository){
+    MovieRestController(MovieRepository movieRepository, ActorRepository actorRepository) {
         this.movieRepository = movieRepository;
         this.actorRepository = actorRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    Collection<MovieDTO> readMovies() {
-        List<MovieDTO> returnMovies = new ArrayList<>();
+    Collection<MovieView> readMovies() {
+        List<MovieView> returnMovies = new ArrayList<>();
         movieRepository.findAll().forEach(
-                movie -> returnMovies.add(new MovieDTO(movie.getId(), movie.getActors(), movie.title, "/movies/"+movie.getId()))
+                movie -> returnMovies.add(new MovieView(movie.getId(), movie.getActors(), movie.title, "/movies/" + movie.getId()))
         );
         return returnMovies;
     }
@@ -54,17 +54,17 @@ class MovieRestController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{movieId}")
     ResponseEntity<Movie> updateMovie(@RequestBody Movie movieArg, @PathVariable Long movieId) throws URISyntaxException {
-        if (!movieRepository.findById(movieId).isPresent()){
+        if (!movieRepository.findById(movieId).isPresent()) {
             createMovie(movieArg);
         }
-        Movie updatedMovie = movieRepository.save(new Movie(movieArg.title,  movieId));
+        Movie updatedMovie = movieRepository.save(new Movie(movieArg.title, movieId));
         return ResponseEntity.ok()
                 .header("Movie with id: " + movieId + " has been updated", HttpStatus.ACCEPTED.toString())
                 .body(updatedMovie);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "{movieId}")
-    ResponseEntity<Movie> removeMovie(@PathVariable Long movieId){
+    ResponseEntity<Movie> removeMovie(@PathVariable Long movieId) {
         validateMovie(movieId);
         movieRepository.findById(movieId).get().getActors().forEach(
                 actor -> actor.unmapMovie(movieId)
@@ -75,7 +75,7 @@ class MovieRestController {
                 .body(null);
     }
 
-    private void validateMovie(Long movieId){
+    private void validateMovie(Long movieId) {
         movieRepository.findById(movieId).orElseThrow(
                 () -> new MovieNotFoundException(movieId));
     }

@@ -8,24 +8,22 @@ import java.util.Set;
 
 
 @Entity
-public class MovieDTO {
-
-    @Id
-    private Long id;
-
-    @ElementCollection
-    private Set<Actor> actors;
+public class MovieView {
 
     @NotNull
     public String title, uri;
+    @Id
+    private Long id;
+    @ElementCollection
+    private Set<Actor> actors;
 
-    public MovieDTO(Long id, String title, String uri) {
+    public MovieView(Long id, String title, String uri) {
         this.id = id;
         this.title = title;
         this.uri = uri;
     }
 
-    public MovieDTO(Long id, Set<Actor> actors, String title, String uri) {
+    public MovieView(Long id, Set<Actor> actors, String title, String uri) {
         this.id = id;
         this.actors = actors;
         this.title = title;

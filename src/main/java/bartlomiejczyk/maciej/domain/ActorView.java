@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @Entity
-public class ActorDTO {
+public class ActorView {
 
     @Id
     @GeneratedValue

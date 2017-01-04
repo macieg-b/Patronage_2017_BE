@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ActorNotFoundException extends RuntimeException {
 
-    public ActorNotFoundException (Long actorId) {
-        super("Could not find actor '" + actorId + "'.");
+    public ActorNotFoundException(Long actorId) {
+        super(String.format("Could not find actor '%s'.", Long.toString(actorId)));
     }
 }

@@ -1,6 +1,9 @@
 package bartlomiejczyk.maciej.domain;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,12 +11,27 @@ import java.util.Set;
 
 @Entity
 public class Movie {
+    @NotNull
+    public String title;
     @ManyToMany(mappedBy = "movies")
     private Set<Actor> actors = new HashSet<>();
-
     @Id
     @GeneratedValue
     private Long id;
+
+    public Movie(String title) {
+        this.title = title;
+    }
+
+
+    public Movie(String title, Long id) {
+        this.title = title;
+        this.id = id;
+    }
+
+    public Movie() {
+
+    }
 
     public Set<Actor> getActors() {
         return actors;
@@ -21,23 +39,5 @@ public class Movie {
 
     public Long getId() {
         return id;
-    }
-
-
-    public Movie(String title) {
-        this.title = title;
-    }
-
-    public Movie(String title, Long id){
-        this.title = title;
-        this.id = id;
-    }
-
-    @NotNull
-    public String title;
-
-
-    public Movie(){
-
     }
 }

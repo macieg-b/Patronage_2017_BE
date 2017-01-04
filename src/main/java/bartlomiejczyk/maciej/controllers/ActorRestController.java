@@ -1,9 +1,9 @@
 package bartlomiejczyk.maciej.controllers;
 
+import bartlomiejczyk.maciej.domain.Actor;
+import bartlomiejczyk.maciej.domain.ActorView;
 import bartlomiejczyk.maciej.domain.Movie;
 import bartlomiejczyk.maciej.exceptions.ActorNotFoundException;
-import bartlomiejczyk.maciej.domain.Actor;
-import bartlomiejczyk.maciej.domain.ActorDTO;
 import bartlomiejczyk.maciej.repositories.ActorRepository;
 import bartlomiejczyk.maciej.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by Holms on 20.12.2016.
- */
 @RestController
 @RequestMapping("/actors")
 class ActorRestController {
@@ -44,27 +41,27 @@ class ActorRestController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<Actor> createActor(@RequestBody ActorDTO actorDto) throws URISyntaxException {
-        Actor newActor = actorRepository.save(new Actor(actorDto.getName()));
+    ResponseEntity<Actor> createActor(@RequestBody ActorView actorView) throws URISyntaxException {
+        Actor newActor = actorRepository.save(new Actor(actorView.getName()));
         return ResponseEntity.created(new URI("/actor/" + newActor.getId()))
                 .header("Actor with id: " + newActor.getId() + " has been created", HttpStatus.CREATED.toString())
                 .body(newActor);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{actorId}")
-    ResponseEntity<Actor> updateActor(@RequestBody ActorDTO actorDto, @PathVariable Long actorId) throws URISyntaxException {
+    ResponseEntity<Actor> updateActor(@RequestBody ActorView actorView, @PathVariable Long actorId) throws URISyntaxException {
         Actor updatedActor;
-        if (actorDto.getMovieIds() != null) {
-            Set<Movie> movies = new HashSet<>(movieRepository.findAll(actorDto.getMovieIds()));
-            updatedActor = actorRepository.save(new Actor(movies, actorDto.getName(), actorId));
+        if (actorView.getMovieIds() != null) {
+            Set<Movie> movies = new HashSet<>(movieRepository.findAll(actorView.getMovieIds()));
+            updatedActor = actorRepository.save(new Actor(movies, actorView.getName(), actorId));
             return ResponseEntity.ok()
                     .header("Actor with id: " + actorId + " has been updated", HttpStatus.ACCEPTED.toString())
                     .body(updatedActor);
         } else {
             if (!actorRepository.findById(actorId).isPresent()) {
-                createActor(actorDto);
+                createActor(actorView);
             }
-            updatedActor = actorRepository.save(new Actor(actorDto.getName(), actorId));
+            updatedActor = actorRepository.save(new Actor(actorView.getName(), actorId));
             return ResponseEntity.ok()
                     .header("Actor with id: " + actorId + " has been updated", HttpStatus.ACCEPTED.toString())
                     .body(updatedActor);
