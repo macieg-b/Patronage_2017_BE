@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -147,6 +148,15 @@ class MovieRestController {
         return ResponseEntity.ok()
                 .header("Movie has been returned", HttpStatus.ACCEPTED.toString())
                 .body(retunedMovies);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/return")
+    Collection<Movie> readAvailableMovies() {
+        return movieRepository
+                .findAll()
+                .stream()
+                .filter(movie -> movie.isAvailable())
+                .collect(Collectors.toList());
     }
 
     private void validateUser(Long userId) {
