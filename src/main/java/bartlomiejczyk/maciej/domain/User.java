@@ -37,4 +37,7 @@ public class User {
         return id;
     }
 
+    public Set<Movie> getBorrowedMovies() {
+        return borrowedMovies;
+    }
 }

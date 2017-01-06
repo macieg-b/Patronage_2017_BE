@@ -11,17 +11,30 @@ import java.util.Set;
 public class MovieView {
 
     @NotNull
-    public String title, uri;
+    public String title;
+
+    public String uri;
     @Id
     private Long id;
     @ElementCollection
     private Set<Actor> actors;
 
-    public MovieView(Long id, Set<Actor> actors, String title, String uri) {
+    public MovieView() {
+
+    }
+
+    public MovieView(Long id, String title) {
         this.id = id;
         this.actors = actors;
         this.title = title;
-        this.uri = uri;
+        this.uri = "/movies/" + id;
+    }
+
+    public MovieView(Long id, Set<Actor> actors, String title) {
+        this.id = id;
+        this.actors = actors;
+        this.title = title;
+        this.uri = "/movies/" + id;
     }
 
     public Long getId() {
