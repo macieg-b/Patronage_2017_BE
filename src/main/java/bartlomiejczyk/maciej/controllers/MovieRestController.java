@@ -42,10 +42,6 @@ class MovieRestController {
 
     @RequestMapping(method = RequestMethod.GET)
     Collection<Movie> readMovies() {
-        List<MovieView> returnMovies = new ArrayList<>();
-        movieRepository.findAll().forEach(
-                movie -> returnMovies.add(new MovieView(movie.getId(), movie.getActors(), movie.title))
-        );
         return movieRepository.findAll();
     }
 
@@ -156,6 +152,15 @@ class MovieRestController {
                 .findAll()
                 .stream()
                 .filter(movie -> movie.isAvailable())
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/category/{category}")
+    Collection<Movie> readMovieByCategory(@PathVariable String category) {
+        return movieRepository
+                .findAll()
+                .stream()
+                .filter(movie -> movie.getCategory().equals(category))
                 .collect(Collectors.toList());
     }
 
