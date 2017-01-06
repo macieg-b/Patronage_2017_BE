@@ -40,4 +40,5 @@ public class User {
     public Set<Movie> getBorrowedMovies() {
         return borrowedMovies;
     }
+
 }

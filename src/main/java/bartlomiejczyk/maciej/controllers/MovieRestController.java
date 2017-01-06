@@ -127,6 +127,27 @@ class MovieRestController {
                 .body(new BorrowView(borrowView.getUserId(), cost, borrowedMovieView));
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/return")
+    ResponseEntity<List<Movie>> returnMovies(@RequestBody BorrowView borrowView) {
+        List<Movie> retunedMovies = new ArrayList<>();
+        validateUser(borrowView.getUserId());
+        List<Long> usersMoviesIds = new ArrayList<>();
+        userRepository.findById(borrowView.getUserId()).get().getBorrowedMovies().forEach(
+                movie -> usersMoviesIds.add(movie.getId())
+        );
+        borrowView.getMovies().forEach(
+                movie -> {
+                    validateMovie(movie.getId());
+                    if (usersMoviesIds.contains(movie.getId())) {
+                        retunedMovies.add(movieRepository.findById(movie.getId()).get());
+                        movieRepository.save(movieRepository.findById(movie.getId()).get()).setBorrower(null);
+                    }
+                }
+        );
+        return ResponseEntity.ok()
+                .header("Movie has been returned", HttpStatus.ACCEPTED.toString())
+                .body(retunedMovies);
+    }
 
     private void validateUser(Long userId) {
         userRepository.findById(userId).orElseThrow(
