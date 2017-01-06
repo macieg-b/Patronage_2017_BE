@@ -164,6 +164,19 @@ class MovieRestController {
                 .collect(Collectors.toList());
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/userId/{userId}")
+    Collection<Movie> readMovieByUser(@PathVariable Long userId) {
+        List<Movie> returnMovies = new ArrayList<>();
+        for (Movie movie : movieRepository.findAll()) {
+            if (movie.getBorrower() != null) {
+                if (movie.getBorrower().getId().equals(userId)) {
+                    returnMovies.add(movie);
+                }
+            }
+        }
+        return returnMovies;
+    }
+
     private void validateUser(Long userId) {
         userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(userId));
