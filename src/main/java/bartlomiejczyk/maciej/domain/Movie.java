@@ -65,8 +65,9 @@ public class Movie {
         return borrower;
     }
 
-    public void setBorrower(User borrower) {
+    public Movie setBorrower(User borrower) {
         this.borrower = borrower;
+        return this;
     }
 
     public String getCategory() {

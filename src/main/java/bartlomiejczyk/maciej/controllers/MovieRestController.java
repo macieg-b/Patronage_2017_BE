@@ -118,7 +118,6 @@ class MovieRestController {
         if (newCount >= 2) {
             cost *= 0.75;
         }
-
         return ResponseEntity.created(new URI("/movies/borrow"))
                 .header("Movies has been borrowed", HttpStatus.CREATED.toString())
                 .body(new BorrowView(borrowView.getUserId(), cost, borrowedMovieView));
@@ -126,24 +125,25 @@ class MovieRestController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/return")
     ResponseEntity<List<Movie>> returnMovies(@RequestBody BorrowView borrowView) {
-        List<Movie> retunedMovies = new ArrayList<>();
+        List<Movie> moviesToReturn = new ArrayList<>();
+        List<Long> usersMoviesIds = new ArrayList<>(), requestMoviesIds = new ArrayList<>();
         validateUser(borrowView.getUserId());
-        List<Long> usersMoviesIds = new ArrayList<>();
         userRepository.findById(borrowView.getUserId()).get().getBorrowedMovies().forEach(
                 movie -> usersMoviesIds.add(movie.getId())
         );
-        borrowView.getMovies().forEach(
-                movie -> {
-                    validateMovie(movie.getId());
-                    if (usersMoviesIds.contains(movie.getId())) {
-                        retunedMovies.add(movieRepository.findById(movie.getId()).get());
-                        movieRepository.save(movieRepository.findById(movie.getId()).get()).setBorrower(null);
-                    }
+        borrowView.getMovies().forEach(movie -> requestMoviesIds.add(movie.getId()));
+        usersMoviesIds.retainAll(requestMoviesIds);
+        usersMoviesIds.forEach(
+                movieId -> {
+                    validateMovie(movieId);
+                    moviesToReturn.add(movieRepository.findById(movieId).get());
+                    movieRepository.save(movieRepository.findById(movieId).get().setBorrower(null));
+
                 }
         );
         return ResponseEntity.ok()
                 .header("Movie has been returned", HttpStatus.ACCEPTED.toString())
-                .body(retunedMovies);
+                .body(moviesToReturn);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/return")
