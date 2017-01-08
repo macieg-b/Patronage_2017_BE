@@ -1,7 +1,6 @@
 package bartlomiejczyk.maciej;
 
 import bartlomiejczyk.maciej.domain.Movie;
-import bartlomiejczyk.maciej.repositories.ActorRepository;
 import bartlomiejczyk.maciej.repositories.MovieRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

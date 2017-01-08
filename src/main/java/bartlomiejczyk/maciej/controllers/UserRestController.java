@@ -28,7 +28,7 @@ public class UserRestController {
     ResponseEntity<User> createUser(@RequestBody User userArg) throws URISyntaxException {
         User newUser = userRepository.save(new User(userArg.getName()));
         return ResponseEntity.created(new URI("/users/" + newUser.getId()))
-                .header("Movie has been created", HttpStatus.CREATED.toString())
+                .header("User has been created", HttpStatus.CREATED.toString())
                 .body(newUser);
     }
 
