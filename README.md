@@ -106,7 +106,7 @@ Users
 Movies
 -------
 ### POST
->**`/movies/borrow`** - borrow movies
+>**`/movies/borrow`** - borrow movies (combinning all available discount) 
 > Input:
 >- "userId",
 >- "movies" : [
