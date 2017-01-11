@@ -2,7 +2,7 @@ package bartlomiejczyk.maciej.controllers;
 
 
 import bartlomiejczyk.maciej.domain.User;
-import bartlomiejczyk.maciej.repositories.UserRepository;
+import bartlomiejczyk.maciej.services.impl.UserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +45,7 @@ public class UserRestControllerTest {
 
 
     @Autowired
-    private UserRepository userRepository;
+    private UserServiceImpl service;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -64,9 +64,7 @@ public class UserRestControllerTest {
     @Before
     public void setup() throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
-        userRepository.deleteAllInBatch();
-
-        userList.add(userRepository.save(new User("User one")));
+        userList.add(service.save(new User("User one")));
     }
 
     @Test

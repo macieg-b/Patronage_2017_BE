@@ -40,6 +40,12 @@ public class Movie {
         this.category = category;
     }
 
+    public Movie(String title, String category, Long id) {
+        this.title = title;
+        this.category = category;
+        this.id = id;
+    }
+
     public Movie(String title, Long id) {
         this.title = title;
         this.id = id;

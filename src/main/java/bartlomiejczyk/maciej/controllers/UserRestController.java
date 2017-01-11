@@ -1,7 +1,7 @@
 package bartlomiejczyk.maciej.controllers;
 
 import bartlomiejczyk.maciej.domain.User;
-import bartlomiejczyk.maciej.repositories.UserRepository;
+import bartlomiejczyk.maciej.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +17,12 @@ import java.net.URISyntaxException;
 @RequestMapping("/users")
 public class UserRestController {
 
-    public final UserRepository userRepository;
-
     @Autowired
-    UserRestController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserService userService;
 
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<User> createUser(@RequestBody User userArg) throws URISyntaxException {
-        User newUser = userRepository.save(new User(userArg.getName()));
+        User newUser = userService.save(userArg);
         return ResponseEntity.created(new URI("/users/" + newUser.getId()))
                 .header("User has been created", HttpStatus.CREATED.toString())
                 .body(newUser);
