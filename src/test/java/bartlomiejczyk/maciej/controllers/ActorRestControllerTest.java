@@ -78,10 +78,10 @@ public class ActorRestControllerTest {
         movieRepository.deleteAllInBatch();
         actorRepository.deleteAllInBatch();
 
-        movieList.add(movieRepository.save(new Movie("Listy do M.")));
-        movieList.add(movieRepository.save(new Movie("Lord of the rings")));
-        movieList.add(movieRepository.save(new Movie("Hobbit")));
-        movieList.add(movieRepository.save((new Movie("Game of thrones"))));
+        movieList.add(movieRepository.save(new Movie("Listy do M.", "new")));
+        movieList.add(movieRepository.save(new Movie("Lord of the rings", "new")));
+        movieList.add(movieRepository.save(new Movie("Hobbit", "best")));
+        movieList.add(movieRepository.save((new Movie("Game of thrones", "others"))));
 
         actorList.add(actorRepository.save(new Actor(new HashSet<Movie>(new ArrayList<>(Arrays.asList(movieList.get(1), movieList.get(2)))), "Ian McKellen")));
         actorList.add(actorRepository.save(new Actor(new HashSet<Movie>(new ArrayList<>(Arrays.asList(movieList.get(1), movieList.get(2)))), "Orlando Bloom")));

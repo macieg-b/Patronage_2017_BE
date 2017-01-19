@@ -25,7 +25,8 @@ Movies
 >**`/movies`** - create movie
 >
 > Input:
->- "tittle"
+>- "tittle" : "",
+>- "category" : "" - (it can be "new", "best", "others" )
 >
 > Response:
 >- "id" : "",
@@ -86,3 +87,70 @@ Actors
 
 ### DELETE
 >**`/actors/{id}`** - remove actor selected by id
+
+
+
+#TASK TWO FEATURES
+
+Users
+-------
+### POST
+>**`/users`** - create user
+> Input:
+>- "name"
+
+> Response:
+>- "id" : "",
+>- "name" : "",
+>- "borrowedMovies" : []
+
+Movies
+-------
+### POST
+>**`/movies/borrow`** - borrow movies (combinning all available discount) 
+> Input:
+>- "userId",
+>- "movies" : [
+    {"id" : "",
+    "title: ""}
+  ]
+
+> Response:
+>- "userId",
+>- "cost", 
+>- "movies" : [
+    {"id" : "",
+    "title: "",
+    "uri" : "",
+    "actors" : []}
+  ]
+  
+### POST
+>**`/movies/return`** - return movies
+> Input:
+>- "userId",
+>- "movies" : [
+    "id" : "",
+    "title": ""
+  ]
+  
+> Response: 
+>- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
+
+### GET
+>**`/movies/available`** - return available movies
+
+> Response: 
+>- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
+
+### GET
+>**`/movies/category/{category}`** - return movies with proper category
+
+> Response: 
+>- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
+
+### GET
+>**`/movies/user/{userId}`** - return movies borrowed by user
+
+> Response: 
+>- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
