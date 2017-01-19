@@ -76,7 +76,7 @@ class MovieRestController {
                 .body(result);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/return")
+    @RequestMapping(method = RequestMethod.GET, value = "/available")
     Collection<Movie> readAvailableMovies() {
         return service.readAvailable();
     }
@@ -86,7 +86,7 @@ class MovieRestController {
         return service.readByCategory(category);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/userId/{userId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/user/{userId}")
     Collection<Movie> readMovieByUser(@PathVariable Long userId) {
         return service.readByUser(userId);
     }

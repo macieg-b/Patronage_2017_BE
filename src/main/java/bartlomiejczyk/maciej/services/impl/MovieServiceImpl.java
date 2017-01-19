@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -89,18 +90,18 @@ public class MovieServiceImpl implements MovieService {
                     categories.add(movieItem.getCategory());
                 });
         Integer newCount, bestCount, othersCount;
-        Double cost;
+        BigDecimal cost;
         newCount = Collections.frequency(categories, "new");
         bestCount = Collections.frequency(categories, "best");
         othersCount = Collections.frequency(categories, "others");
-        cost = Integer.valueOf(20 * newCount + 15 * bestCount + 10 * othersCount).doubleValue();
+        cost = new BigDecimal(20 * newCount + 15 * bestCount + 10 * othersCount);
         if (categories.size() == 4 && othersCount >= 1) {
-            cost -= 10;
+            cost.subtract(new BigDecimal(10));
         }
         if (newCount >= 2) {
-            cost *= 0.75;
+            cost.multiply(new BigDecimal(0.75));
         }
-        return new BorrowView(borrowView.getUserId(), cost, borrowedMovieView);
+        return new BorrowView(borrowView.getUserId(), cost.doubleValue(), borrowedMovieView);
     }
 
     @Override

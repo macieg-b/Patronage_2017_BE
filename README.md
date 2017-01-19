@@ -25,7 +25,8 @@ Movies
 >**`/movies`** - create movie
 >
 > Input:
->- "tittle"
+>- "tittle" : "",
+>- "category" : "" - (it can be "new", "best", "others" )
 >
 > Response:
 >- "id" : "",
@@ -137,7 +138,7 @@ Movies
 >- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
 
 ### GET
->**`/movies/return`** - return available movies
+>**`/movies/available`** - return available movies
 
 > Response: 
 >- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
