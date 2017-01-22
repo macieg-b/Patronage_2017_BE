@@ -1,9 +1,13 @@
 package bartlomiejczyk.maciej.controllers;
 
+import bartlomiejczyk.maciej.controllers.util.PaginationUtil;
 import bartlomiejczyk.maciej.domain.BorrowView;
 import bartlomiejczyk.maciej.domain.Movie;
 import bartlomiejczyk.maciej.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,10 +29,11 @@ class MovieRestController {
     @Autowired
     private MovieService service;
 
-
     @RequestMapping(method = RequestMethod.GET)
-    Collection<Movie> readMovies() {
-        return service.readAll();
+    ResponseEntity<List<Movie>> readMovies(Pageable pageable) throws URISyntaxException {
+        Page<Movie> page = service.readAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/movies");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{movieId}")

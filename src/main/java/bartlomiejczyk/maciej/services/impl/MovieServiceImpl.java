@@ -11,6 +11,8 @@ import bartlomiejczyk.maciej.repositories.MovieRepository;
 import bartlomiejczyk.maciej.repositories.UserRepository;
 import bartlomiejczyk.maciej.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,8 +35,8 @@ public class MovieServiceImpl implements MovieService {
     private UserRepository userRepository;
 
     @Override
-    public List<Movie> readAll() {
-        return movieRepository.findAll();
+    public Page<Movie> readAll(Pageable pageable) {
+        return movieRepository.findAll(pageable);
     }
 
     @Override
