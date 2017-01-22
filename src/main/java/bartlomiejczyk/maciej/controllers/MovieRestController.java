@@ -29,7 +29,7 @@ class MovieRestController {
     @Autowired
     private MovieService service;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, produces = {"application/xml", "application/json"})
     ResponseEntity<List<Movie>> readMovies(Pageable pageable) throws URISyntaxException {
         Page<Movie> page = service.readAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/movies");

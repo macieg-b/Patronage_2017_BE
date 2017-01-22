@@ -8,11 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
+@XmlRootElement
 public class Movie {
     @NotNull
     public String title;
