@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class MovieServiceImpl implements MovieService {
+    private static final Integer newPrice = 20, bestPrice = 15, othersPrice = 10;
 
     @Autowired
     private MovieRepository movieRepository;
@@ -98,7 +99,7 @@ public class MovieServiceImpl implements MovieService {
         newCount = Collections.frequency(categories, "new");
         bestCount = Collections.frequency(categories, "best");
         othersCount = Collections.frequency(categories, "others");
-        cost = new BigDecimal(20 * newCount + 15 * bestCount + 10 * othersCount);
+        cost = new BigDecimal(newPrice * newCount + bestPrice * bestCount + othersPrice * othersCount);
         if (categories.size() == 4 && othersCount >= 1) {
             cost.subtract(new BigDecimal(10));
         }
