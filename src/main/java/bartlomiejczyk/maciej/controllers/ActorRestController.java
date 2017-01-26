@@ -5,6 +5,7 @@ import bartlomiejczyk.maciej.domain.ActorView;
 import bartlomiejczyk.maciej.services.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,7 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/actors")
+@RequestMapping(value = "/actors", produces = {MediaType.APPLICATION_JSON_VALUE})
 class ActorRestController {
 
     @Autowired
@@ -33,7 +34,7 @@ class ActorRestController {
         return service.readOne(actorId);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<Actor> createActor(@RequestBody ActorView actorView) throws URISyntaxException {
         Actor newActor = service.save(actorView);
         return ResponseEntity.created(new URI("/actor/" + newActor.getId()))
@@ -41,7 +42,7 @@ class ActorRestController {
                 .body(newActor);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/{actorId}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{actorId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<Actor> updateActor(@RequestBody ActorView actorView, @PathVariable Long actorId) throws URISyntaxException {
         Actor updatedActor = service.update(actorView, actorId);
         return ResponseEntity.ok()

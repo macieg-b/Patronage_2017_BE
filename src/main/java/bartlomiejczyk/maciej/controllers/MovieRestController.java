@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,13 +24,13 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/movies")
+@RequestMapping(value = "/movies", produces = { MediaType.APPLICATION_JSON_VALUE })
 class MovieRestController {
 
     @Autowired
     private MovieService service;
 
-    @RequestMapping(method = RequestMethod.GET, produces = {"application/xml", "application/json"})
+    @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<List<Movie>> readMovies(Pageable pageable) throws URISyntaxException {
         Page<Movie> page = service.readAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/movies");
@@ -50,7 +51,7 @@ class MovieRestController {
                 .body(newMovie);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/{movieId}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{movieId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<Movie> updateMovie(@RequestBody Movie movieArg, @PathVariable Long movieId) throws URISyntaxException {
         Movie updatedMovie = service.update(movieArg, movieId);
         return ResponseEntity.ok()
@@ -66,7 +67,7 @@ class MovieRestController {
                 .body(null);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/borrow")
+    @RequestMapping(method = RequestMethod.POST, value = "/borrow", consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<BorrowView> borrowMovies(@RequestBody BorrowView borrowView) throws URISyntaxException {
         BorrowView result = service.borrow(borrowView);
         return ResponseEntity.created(new URI("/movies/borrow"))
@@ -74,7 +75,7 @@ class MovieRestController {
                 .body(result);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/return")
+    @RequestMapping(method = RequestMethod.POST, value = "/return", consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<List<Movie>> returnMovies(@RequestBody BorrowView borrowView) {
         List<Movie> result = service.returnMovies(borrowView);
         return ResponseEntity.ok()

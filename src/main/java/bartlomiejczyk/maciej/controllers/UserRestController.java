@@ -4,6 +4,7 @@ import bartlomiejczyk.maciej.domain.User;
 import bartlomiejczyk.maciej.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(value = "/users", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class UserRestController {
 
     @Autowired
