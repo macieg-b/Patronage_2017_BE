@@ -33,6 +33,7 @@ class MovieRestController {
     ResponseEntity<List<Movie>> readMovies(Pageable pageable) throws URISyntaxException {
         Page<Movie> page = service.readAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/movies");
+        headers.add(HttpHeaders.CACHE_CONTROL, "max-age=300");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
