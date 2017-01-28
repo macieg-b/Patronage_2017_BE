@@ -22,9 +22,9 @@ public interface MovieService {
 
     List<Movie> returnMovies (BorrowView borrowView);
 
-    List<Movie> readAvailable();
+    Page<Movie> readByCategory(Pageable pageable, String category);
 
-    List<Movie> readByCategory(String category);
+    Page<Movie> readByUser(Pageable pageable, Long id);
 
-    List<Movie> readByUser(Long id);
+    Page<Movie> readByAvailability(Pageable pageable,Boolean availability);
 }

@@ -33,6 +33,8 @@ public class Movie {
     @NotNull
     private String category;
 
+    private Boolean availability = true;
+
     public Movie(String title) {
         this.title = title;
     }
@@ -69,12 +71,12 @@ public class Movie {
         return title;
     }
 
-    public User getBorrower() {
-        return borrower;
-    }
-
     public Movie setBorrower(User borrower) {
         this.borrower = borrower;
+        if (borrower == null)
+            availability = true;
+        else
+            availability = false;
         return this;
     }
 
@@ -82,11 +84,8 @@ public class Movie {
         return category;
     }
 
-    public boolean isAvailable() {
-        if (borrower == null) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean getAvailability() {
+        return availability;
     }
+
 }

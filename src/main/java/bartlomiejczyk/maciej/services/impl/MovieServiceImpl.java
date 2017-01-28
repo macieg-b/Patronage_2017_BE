@@ -11,7 +11,6 @@ import bartlomiejczyk.maciej.repositories.MovieRepository;
 import bartlomiejczyk.maciej.repositories.UserRepository;
 import bartlomiejczyk.maciej.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,10 +35,10 @@ public class MovieServiceImpl implements MovieService {
     private UserRepository userRepository;
 
     @Override
-    @Cacheable(value = "moviesCache")
     public Page<Movie> readAll(Pageable pageable) {
         return movieRepository.findAll(pageable);
     }
+
 
     @Override
     public Movie readOne(Long id) {
@@ -82,7 +80,7 @@ public class MovieServiceImpl implements MovieService {
             validateMovie(movieItem.getId());
             movie = movieRepository.findById(movieItem.getId()).get();
             borrowedMovie.add(movie);
-            if (movie.isAvailable()) {
+            if (movie.getAvailability()) {
                 movie.setBorrower(userRepository.findById(borrowView.getUserId()).get());
                 movieRepository.save(movie);
                 borrowedMovieView.add(new MovieView(movie.getId(), movie.getTitle()));
@@ -131,34 +129,18 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> readAvailable() {
-        return movieRepository
-                .findAll()
-                .stream()
-                .filter(movie -> movie.isAvailable())
-                .collect(Collectors.toList());
+    public Page<Movie> readByCategory(Pageable pageable, String category) {
+        return movieRepository.findByCategory(pageable, category);
     }
 
     @Override
-    public List<Movie> readByCategory(String category) {
-        return movieRepository
-                .findAll()
-                .stream()
-                .filter(movie -> movie.getCategory().equals(category))
-                .collect(Collectors.toList());
+    public Page<Movie> readByUser(Pageable pageable, Long id) {
+        return movieRepository.findByBorrower_Id(pageable, id);
     }
 
     @Override
-    public List<Movie> readByUser(Long id) {
-        List<Movie> returnMovies = new ArrayList<>();
-        for (Movie movie : movieRepository.findAll()) {
-            if (movie.getBorrower() != null) {
-                if (movie.getBorrower().getId().equals(id)) {
-                    returnMovies.add(movie);
-                }
-            }
-        }
-        return returnMovies;
+    public Page<Movie> readByAvailability(Pageable pageable, Boolean availability) {
+        return movieRepository.findByAvailability(pageable, availability);
     }
 
     private void validateUser(Long userId) {

@@ -15,24 +15,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/movies", produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/movies", produces = {MediaType.APPLICATION_JSON_VALUE})
 class MovieRestController {
 
     @Autowired
     private MovieService service;
 
     @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity<List<Movie>> readMovies(Pageable pageable) throws URISyntaxException {
-        Page<Movie> page = service.readAll(pageable);
+    ResponseEntity<List<Movie>> readMovies(Pageable pageable,
+                                           @RequestParam(value = "userId", required = false) Long userId,
+                                           @RequestParam(value = "category", required = false) String category,
+                                           @RequestParam(value = "availability", required = false) Boolean availability
+    ) throws URISyntaxException {
+        Page<Movie> page = null;
+        if (userId == null && category == null && availability == null) {
+            page = service.readAll(pageable);
+        } else if (userId != null) {
+            page = service.readByUser(pageable, userId);
+        } else if (category != null) {
+            page = service.readByCategory(pageable, category);
+        } else if (availability != null) {
+            page = service.readByAvailability(pageable, availability);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/movies");
         headers.add(HttpHeaders.CACHE_CONTROL, "max-age=300");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -59,7 +72,7 @@ class MovieRestController {
                 .body(updatedMovie);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "{movieId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{movieId}")
     ResponseEntity<Movie> removeMovie(@PathVariable Long movieId) {
         service.delete(movieId);
         return ResponseEntity.ok()
@@ -81,21 +94,6 @@ class MovieRestController {
         return ResponseEntity.ok()
                 .header("Movie has been returned", HttpStatus.ACCEPTED.toString())
                 .body(result);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/available")
-    Collection<Movie> readAvailableMovies() {
-        return service.readAvailable();
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/category/{category}")
-    Collection<Movie> readMovieByCategory(@PathVariable String category) {
-        return service.readByCategory(category);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/user/{userId}")
-    Collection<Movie> readMovieByUser(@PathVariable Long userId) {
-        return service.readByUser(userId);
     }
 
 
