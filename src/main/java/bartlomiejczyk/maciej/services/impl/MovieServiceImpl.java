@@ -88,9 +88,9 @@ public class MovieServiceImpl implements MovieService {
         }
         /*Count cost*/
         List<String> categories = new ArrayList<>();
-        borrowedMovie.forEach(
+        borrowedMovieView.forEach(
                 movieItem -> {
-                    categories.add(movieItem.getCategory());
+                    categories.add(movieRepository.findOne(movieItem.getId()).getCategory());
                 });
         Integer newCount, bestCount, othersCount;
         BigDecimal cost;

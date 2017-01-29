@@ -138,19 +138,24 @@ Movies
 >- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
 
 ### GET
->**`/movies/available`** - return available movies
+>**`/movies?available=arg`** - return available movies, arg = {true, false}
 
 > Response: 
 >- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
 
 ### GET
->**`/movies/category/{category}`** - return movies with proper category
+>**`/movies?category=arg`** - return movies with proper category, arg = {new, best, others}
 
 > Response: 
 >- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
 
 ### GET
->**`/movies/user/{userId}`** - return movies borrowed by user
+>**`/movies?userId=arg`** - return movies borrowed by user, arg - int number
 
 > Response: 
 >- [{"title" : "", "actors" : [], "id":"", "category":"", "available":""}]
+
+
+#TASK THREE FEATURES
+
+Documentation available on: http://localhost:8080/swagger-ui.html

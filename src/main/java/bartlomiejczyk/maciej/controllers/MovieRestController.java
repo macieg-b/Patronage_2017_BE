@@ -83,9 +83,12 @@ class MovieRestController {
     @RequestMapping(method = RequestMethod.POST, value = "/borrow", consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<BorrowView> borrowMovies(@RequestBody BorrowView borrowView) throws URISyntaxException {
         BorrowView result = service.borrow(borrowView);
-        return ResponseEntity.created(new URI("/movies/borrow"))
-                .header("Movies has been borrowed", HttpStatus.CREATED.toString())
-                .body(result);
+        if(result.getMovies().isEmpty())
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        else
+            return ResponseEntity.created(new URI("/movies/borrow"))
+                    .header("Movies has been borrowed", HttpStatus.CREATED.toString())
+                    .body(result);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/return", consumes = {MediaType.APPLICATION_JSON_VALUE})
