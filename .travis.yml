@@ -8,6 +8,9 @@ addons:
     packages:
     - oracle-java8-installer
 
-sudo: true
+sudo: false
+
+before_install:
+  - chmod +x mvnw
 
 install: true
